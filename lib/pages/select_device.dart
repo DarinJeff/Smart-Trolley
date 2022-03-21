@@ -68,14 +68,6 @@ class _SelectBondedDevicePage extends State<SelectBondedDevicePage> {
     });
   }
 
-  void _restartDiscovery() {
-    setState(() {
-      _isDiscovering = true;
-    });
-
-    _startDiscovery();
-  }
-
   void _startDiscovery() {
     _discoveryStreamSubscription =
         FlutterBluetoothSerial.instance.startDiscovery().listen((r) {
@@ -128,7 +120,7 @@ class _SelectBondedDevicePage extends State<SelectBondedDevicePage> {
       body: Container(
         decoration: const BoxDecoration(
             gradient: RadialGradient(colors: [
-              Color(0xFF505050),
+              Color(0xEE505050),
               Colors.black,
             ], radius: 1)),
         child: Column(

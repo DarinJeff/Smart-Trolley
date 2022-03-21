@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bluetooth_serial/flutter_bluetooth_serial.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:smart_trolley/map/radar_map.dart';
+import 'package:flutter/services.dart';
 
 class RadarMap extends StatefulWidget {
   final BluetoothDevice server;
@@ -18,6 +19,7 @@ class RadarMap extends StatefulWidget {
 class _RadarMapState extends State<RadarMap> {
   bool useSides = false;
   String transmission = '';
+  int distance = 0;
   int directionIndex = 0;
   static List<int> ticks = [20, 40, 60, 80, 100, 120, 140];
   static List<String> features = [
@@ -31,7 +33,7 @@ class _RadarMapState extends State<RadarMap> {
     ""
   ];
   var mapData = [
-    [70, 70, 70, 70, 70, 70, 70, 70]
+    [0, 0, 0, 0, 0, 0, 0, 0]
   ];
   int mapDataIndex = 0;
   BluetoothConnection? connection;
@@ -91,7 +93,7 @@ class _RadarMapState extends State<RadarMap> {
       body: Container(
         decoration: const BoxDecoration(
             gradient: RadialGradient(colors: [
-          Color(0xFF505050),
+          Color(0xDD505050),
           Colors.black,
         ], radius: 1)),
         child: Column(
@@ -128,8 +130,12 @@ class _RadarMapState extends State<RadarMap> {
         mapDataIndex = 0;
       } else {
         setState(() {
-          mapData[0][mapDataIndex] = min(max(int.parse(transmission), 1), 150);
+          distance = min(int.parse(transmission), 150);
+          mapData[0][mapDataIndex] = distance;
           mapDataIndex = (mapDataIndex + 1) % mapData[0].length;
+          if(distance<=5){
+            HapticFeedback.vibrate();
+          }
         });
       }
       transmission = '';

@@ -14,14 +14,8 @@ class HomePage extends StatefulWidget {
 
 class _HomePage extends State<HomePage> {
   BluetoothState _bluetoothState = BluetoothState.UNKNOWN;
-
-  String _address = "...";
-  String _name = "...";
-
   Timer? _discoverableTimeoutTimer;
-  int _discoverableTimeoutSecondsLeft = 0;
 
-  bool _autoAcceptPairingRequests = false;
 
   @override
   void initState() {
@@ -45,14 +39,12 @@ class _HomePage extends State<HomePage> {
       // Update the address field
       FlutterBluetoothSerial.instance.address.then((address) {
         setState(() {
-          _address = address!;
         });
       });
     });
 
     FlutterBluetoothSerial.instance.name.then((name) {
       setState(() {
-        _name = name!;
       });
     });
 
@@ -65,7 +57,6 @@ class _HomePage extends State<HomePage> {
 
         // Discoverable mode is disabled when Bluetooth gets disabled
         _discoverableTimeoutTimer = null;
-        _discoverableTimeoutSecondsLeft = 0;
       });
     });
   }
