@@ -17,6 +17,7 @@ class RadarMap extends StatefulWidget {
 }
 
 class _RadarMapState extends State<RadarMap> {
+  bool danger = false;
   bool useSides = false;
   String transmission = '';
   int distance = 0;
@@ -32,7 +33,7 @@ class _RadarMapState extends State<RadarMap> {
     "Left",
     ""
   ];
-  var mapData = [
+  List<List<int>> mapData = [
     [0, 0, 0, 0, 0, 0, 0, 0]
   ];
   int mapDataIndex = 0;
@@ -41,6 +42,9 @@ class _RadarMapState extends State<RadarMap> {
 
   bool get isConnected => (connection?.isConnected ?? false);
   bool isDisconnecting = false;
+
+  Color axisGreen = Color(0xFF50F090);
+  Color chartGreen = Color(0x8850F090);
 
   @override
   void initState() {
@@ -85,33 +89,38 @@ class _RadarMapState extends State<RadarMap> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.green,
+        backgroundColor: danger ? Colors.red : Colors.green,
         centerTitle: true,
-        title: Text('Smart Trolley', style: GoogleFonts.abrilFatface(color: Colors.black,
+        title: Text(
+          'Smart Trolley', style: GoogleFonts.robotoCondensed(color: Colors.black,
             fontSize: 25, fontWeight: FontWeight.bold),),
       ),
       body: Container(
         decoration: const BoxDecoration(
             gradient: RadialGradient(colors: [
-          Color(0xDD505050),
-          Colors.black,
-        ], radius: 1)),
+              Color(0xDD505050),
+              Colors.black,
+            ], radius: 1)),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             SizedBox(height: 10,),
             ListTile(title: Text(
-              'Radar Map', style: GoogleFonts.openSans(fontSize: 20, color: Colors.white),)),
+              'Radar Map',
+              style: GoogleFonts.openSans(fontSize: 20, color: Colors.white),)),
             Divider(color: Colors.blueGrey),
             SizedBox(height: 10,),
             Expanded(
                 child: RadarChart.dark(
-              ticks: ticks,
-              features: features,
-              data: mapData,
-              reverseAxis: false,
-              useSides: useSides,
-            )),
+                  ticks: ticks,
+                  features: features,
+                  data: mapData,
+                  reverseAxis: false,
+                  useSides: useSides,
+                  axisColor: danger ? Colors.pinkAccent : axisGreen,
+                  outlineColor: danger? Colors.red : Colors.lightGreenAccent,
+                  graphColors: danger ? [Colors.redAccent] : [Colors.lightGreen],
+                )),
           ],
         ),
       ),
@@ -128,13 +137,19 @@ class _RadarMapState extends State<RadarMap> {
       print('transmission: $transmission');
       if (transmission == '-1') {
         mapDataIndex = 0;
+        print(mapData[0].reduce(min));
+        if (mapData[0].reduce(min) > 10)
+          setState(() {
+            danger = false;
+          });
       } else {
         setState(() {
           distance = min(int.parse(transmission), 150);
           mapData[0][mapDataIndex] = distance;
           mapDataIndex = (mapDataIndex + 1) % mapData[0].length;
-          if(distance<=5){
+          if (distance <= 10) {
             HapticFeedback.vibrate();
+            danger = true;
           }
         });
       }

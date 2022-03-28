@@ -6,11 +6,8 @@ import 'dart:math' as math;
 import 'package:flutter/material.dart';
 import 'dart:math' show pi, cos, sin;
 
-const defaultGraphColors = [
-  Colors.green,
-  Colors.blue,
-  Colors.red,
-  Colors.orange,
+const List<Color> defaultGraphColors = [
+  Colors.lightGreen
 ];
 
 class RadarChart extends StatefulWidget {
@@ -45,14 +42,19 @@ class RadarChart extends StatefulWidget {
     required List<List<num>> data,
     bool reverseAxis = false,
     bool useSides = false,
+    Color axisColor = Colors.grey,
+    Color outlineColor = Colors.white,
+    List<Color> graphColors = defaultGraphColors
+
   }) {
     return RadarChart(
         ticks: ticks,
         features: features,
         data: data,
-        featuresTextStyle: const TextStyle(color: Colors.white, fontSize: 16),
-        outlineColor: Colors.white,
-        axisColor: Colors.grey,
+        featuresTextStyle: const TextStyle(color: Colors.white, fontSize: 20),
+        outlineColor: outlineColor,
+        axisColor: axisColor,
+        graphColors: graphColors,
         reverseAxis: reverseAxis,
         sides: useSides ? features.length : 0);
   }
@@ -79,7 +81,7 @@ class _RadarChartState extends State<RadarChart>
     ))
       ..addListener(() {
         setState(() {
-          fraction = 0.99 + 0.01*animation.value;
+          fraction = 0.98 + 0.02*animation.value;
         });
       });
 
@@ -89,7 +91,6 @@ class _RadarChartState extends State<RadarChart>
   @override
   void didUpdateWidget(RadarChart oldWidget) {
     super.didUpdateWidget(oldWidget);
-
     animationController.reset();
     animationController.forward();
   }
