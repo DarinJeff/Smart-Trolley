@@ -2,10 +2,11 @@ import 'dart:math';
 import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter_beep/flutter_beep.dart';
 import 'package:flutter_bluetooth_serial/flutter_bluetooth_serial.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:smart_trolley/map/radar_map.dart';
-import 'package:flutter/services.dart';
 
 class RadarMap extends StatefulWidget {
   final BluetoothDevice server;
@@ -89,38 +90,52 @@ class _RadarMapState extends State<RadarMap> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: danger ? Colors.red : Colors.green,
+        backgroundColor: danger ? Color(0xFF903030) : Colors.green,
         centerTitle: true,
         title: Text(
-          'Smart Trolley', style: GoogleFonts.robotoCondensed(color: Colors.black,
-            fontSize: 25, fontWeight: FontWeight.bold),),
+          'Smart Trolley',
+          style: GoogleFonts.abrilFatface(
+              color: Colors.black, fontSize: 25, fontWeight: FontWeight.bold),
+        ),
       ),
       body: Container(
-        decoration: const BoxDecoration(
-            gradient: RadialGradient(colors: [
-              Color(0xDD505050),
-              Colors.black,
-            ], radius: 1)),
+        decoration: danger
+            ? BoxDecoration(
+                gradient: RadialGradient(colors: [
+                Color(0xDD505050),
+                Color(0xFF200000),
+              ], radius: 1))
+            : BoxDecoration(
+                gradient: RadialGradient(colors: [
+                Color(0xDD505050),
+                Color(0xFF001000),
+              ], radius: 1)),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            SizedBox(height: 10,),
-            ListTile(title: Text(
+            SizedBox(
+              height: 10,
+            ),
+            ListTile(
+                title: Text(
               'Radar Map',
-              style: GoogleFonts.openSans(fontSize: 20, color: Colors.white),)),
+              style: GoogleFonts.openSans(fontSize: 20, color: Colors.white),
+            )),
             Divider(color: Colors.blueGrey),
-            SizedBox(height: 10,),
+            SizedBox(
+              height: 10,
+            ),
             Expanded(
                 child: RadarChart.dark(
-                  ticks: ticks,
-                  features: features,
-                  data: mapData,
-                  reverseAxis: false,
-                  useSides: useSides,
-                  axisColor: danger ? Colors.pinkAccent : axisGreen,
-                  outlineColor: danger? Colors.red : Colors.lightGreenAccent,
-                  graphColors: danger ? [Colors.redAccent] : [Colors.lightGreen],
-                )),
+              ticks: ticks,
+              features: features,
+              data: mapData,
+              reverseAxis: false,
+              useSides: useSides,
+              axisColor: danger ? Colors.pinkAccent : axisGreen,
+              outlineColor: danger ? Colors.red : Colors.lightGreenAccent,
+              graphColors: danger ? [Colors.redAccent] : [Colors.lightGreen],
+            )),
           ],
         ),
       ),

@@ -33,6 +33,7 @@ dependencies:
   google_fonts: 2.1.1
   flutter_radar_chart: ^0.2.1
   font_awesome_flutter: ^10.0.0
+  flutter_beep: ^1.0.0
 
 dev_dependencies:
   flutter_test:
